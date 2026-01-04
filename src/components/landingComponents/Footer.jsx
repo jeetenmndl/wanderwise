@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
 const Footer = () => {
-
-    const [first, setfirst] = useState(1);
-
-    useEffect(() => {
-      console.log("Footer component mounted");
-    }, [first])
     
   return (
-    <footer className='flex items-center justify-between px-60 py-20 bg-gray-50'>
+    <footer className='flex items-center justify-between px-40 py-20 bg-gray-50'>
         {/* left part  */}
         <div>
-            <div className='mb-10' onClick={()=>{setfirst(first+1)}}>
+            <div className='mb-10'>
                 <h2 className='text-4xl font-bold mb-2'>WanderWise</h2>
                 <p className='text-lg text-gray-700'>Enjoy the trip with no worries.</p>
             </div>
@@ -24,7 +18,7 @@ const Footer = () => {
         </div>
 
         {/* right part  */}
-        <div className='flex items-center gap-20'>
+        <div className='flex items-center gap-32'>
             <div className='flex flex-col gap-2 text-lg font-medium text-gray-700'>
                 <h4 className='text-black text-xl'>Features</h4>
                 <a href="#">Your Trips</a>

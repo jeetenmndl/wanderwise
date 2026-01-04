@@ -3,15 +3,16 @@ import CustomButton from '../common/CustomButton'
 
 const Navbar = () => {
   return (
-    <header className='flex justify-between items-center px-20 py-4'>
+    <header className='flex justify-between items-center px-20 py-5'>
         {/* left navbar  */}
-        <div>
-            <h2 className='text-4xl font-bold'>WanderWise</h2>
+        <div className='flex items-center gap-4'>
+            <img src="/logo.png" alt="WanderWise Logo" className='w-12 h-12 rounded-full'/>
+            <h2 className='text-3xl font-bold'>WanderWise</h2>
         </div>
 
         {/* right navbar  */}
         <div className='flex items-center gap-16'>
-            <nav className='flex items-center gap-6 [&>a]:text-gray-500 [&>a]:text-lg [&>a]:font-medium [&>a]:hover:text-purple-600'>
+            <nav className='flex items-center gap-8 [&>a]:text-gray-800 font-medium [&>a]:hover:text-purple-600 [&>a]:hover:underline'>
                 <a href="#">Features</a>
                 <a href="#">About</a>
                 <a href="#">Famous Trips</a>

@@ -5,7 +5,7 @@ import { BanknoteArrowDown, History, Map, NotebookPen } from 'lucide-react'
 const featuresData = [
     {
         title: "Personalized Itineraries",
-        description: "Create customized travel plans based on your interests, budget, and schedule with our intelligent itinerary generator.",
+        description: "Create customized travel plans based on your interests, budget, and schedule with our itinerary generator.",
         icon: Map
     },
     {
