@@ -3,7 +3,7 @@ import CustomButton from '../common/CustomButton'
 
 const Hero = () => {
   return (
-    <section className='h-150 flex items-center justify-center px-40 relative overflow-hidden'>
+    <section className='h-150 flex items-center justify-center px-52 relative overflow-hidden'>
 
         {/* content  */}
         <div className='flex flex-col items-center gap-10 text-white'>
