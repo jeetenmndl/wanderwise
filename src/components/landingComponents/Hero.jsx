@@ -1,5 +1,6 @@
 import React from 'react'
 import CustomButton from '../common/CustomButton'
+import { Button} from '@/components/ui/button'
 
 const Hero = () => {
   return (
@@ -12,6 +13,9 @@ const Hero = () => {
                 Discover the world with our travel planning tools and expert advice. Start your adventure today! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis nemo aspernatur ratione nihil. Quia id modi ipsa nesciunt accusamus et?
             </p>
             <CustomButton text="Get Started" />
+
+            <Button variant="destructive">Hello</Button>
+
         </div>
 
         {/* background image */}
