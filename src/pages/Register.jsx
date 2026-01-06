@@ -18,7 +18,14 @@ const formSchema = z.object({
     email: z.string().min(5, {
         message: "Email must be at least 5 characters.",
     }),
-    password: z.string().min(8).max(20)
+    password: z.string().min(8, {
+        message: "Password must be between 8 and 20 characters.",
+    }).max(20),
+    confirmPassword: z.string().min(8).max(20),
+}
+).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
 })
 
 export default function Register() {
@@ -28,6 +35,7 @@ export default function Register() {
         defaultValues: {
             email: "",
             password: "",
+            confirmPassword: "",
         },
     });
 
@@ -48,9 +56,6 @@ export default function Register() {
                             <FormControl>
                                 <Input type="email" placeholder="john@gmail.com" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your public display name.
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -66,8 +71,22 @@ export default function Register() {
                                 <Input placeholder="********" type="password" {...field} />
                             </FormControl>
                             <FormDescription>
-                                This is your public display name.
+                                Password must be atleast 8 digits.
                             </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Confirm Password</FormLabel>
+                            <FormControl>
+                                <Input placeholder="********" type="password" {...field} />
+                            </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
