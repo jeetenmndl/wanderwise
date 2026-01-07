@@ -14,10 +14,6 @@ const Hero = () => {
             </p>
             <CustomButton text="Get Started" />
 
-            <Button className={"bg-purple-500"}>
-              Hello
-            </Button>
-
         </div>
 
         {/* background image */}
