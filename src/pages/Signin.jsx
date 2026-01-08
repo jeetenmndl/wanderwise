@@ -22,6 +22,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import useAuth from "@/hooks/useAuth"
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
+import { loginUser } from "@/api/auth"
 
 const formSchema = z.object({
     email: z.string().min(2, {
@@ -34,6 +38,9 @@ const formSchema = z.object({
 
 export default function SigninPage() {
 
+    const {login} = useAuth();
+    const navigate = useNavigate();
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -42,9 +49,22 @@ export default function SigninPage() {
         },
     });
 
-    const onSubmit = (data) => {
-        console.log(data);
-    }
+   const onSubmit = async (data) => {
+           console.log(data);
+           try {
+               const response = await loginUser(data);
+               console.log(response);
+               if(response.token){
+                   login(response.user, response.token);
+                   navigate("/dashboard");
+               }else{
+                   toast.error("Signin failed. Please try again.");
+               }
+           } catch (error) {
+               console.log(error);
+               toast.error("Signin failed. Please try again.");
+           }
+       }
 
     return (
         <section className="h-dvh flex items-center justify-center">

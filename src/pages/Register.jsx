@@ -23,6 +23,9 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { registerUser } from "@/api/auth"
+import useAuth from "@/hooks/useAuth"
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -44,6 +47,9 @@ const formSchema = z.object({
 
 export default function Register() {
 
+    const {login} = useAuth();
+    const navigate = useNavigate();
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -60,8 +66,15 @@ export default function Register() {
         try {
             const response = await registerUser({name, email, password});
             console.log(response);
+            if(response.token){
+                login(response.user, response.token);
+                navigate("/dashboard");
+            }else{
+                toast.error("Registration failed. Please try again.");
+            }
         } catch (error) {
             console.log(error);
+            toast.error("Registration failed. Please try again.");
         }
     }
 
