@@ -72,9 +72,12 @@ export default function SigninPage() {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
                     <Card className="w-100">
-                        <CardHeader>
-                            <CardTitle>Sign In</CardTitle>
+                        <CardHeader className={"flex items-center justify-between border-b"}>
+                            <div>
+                            <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
                             <CardDescription>Enter your credentials to sign in.</CardDescription>
+                            </div>
+                            <img className="w-10 h-10" src="/logo.png" alt="Wanderwise Logo" />
                         </CardHeader>
 
                         <CardContent className="space-y-4">
