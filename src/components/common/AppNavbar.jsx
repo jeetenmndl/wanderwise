@@ -6,7 +6,7 @@ const AppNavbar = () => {
     const { logout } = useAuth();
 
     return (
-        <header className='flex justify-between items-center px-20 py-5'>
+        <header className='flex justify-between items-center px-20 py-5 border-b border-gray-200 shadow-md'>
             {/* left navbar  */}
             <div className='flex items-center gap-4'>
                 <img src="/logo.png" alt="WanderWise Logo" className='w-12 h-12 rounded-full' />

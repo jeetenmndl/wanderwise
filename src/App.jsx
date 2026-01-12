@@ -7,6 +7,9 @@ import Dashboard from "./pages/Dashboard";
 import useAuth from "./hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
 import AppLayout from "./components/layouts/AppLayout";
+import TripsPage from "./pages/trips/TripsPage";
+import AddTripPage from "./pages/trips/AddTripPage";
+import EditTripPage from "./pages/trips/EditTripPage";
 
 export default function App() {
   const { token, logout } = useAuth();
@@ -53,6 +56,9 @@ export default function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/dashboard" element={<Dashboard />} />
 
+          <Route path="/trips" element={<TripsPage />} />
+          <Route path="/trips/add" element={<AddTripPage />} />
+          <Route path="/trips/edit/:id" element={<EditTripPage />} />
         </Route>
 
       </Routes>
