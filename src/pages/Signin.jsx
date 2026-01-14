@@ -50,7 +50,6 @@ export default function SigninPage() {
     });
 
    const onSubmit = async (data) => {
-           console.log(data);
            try {
                const response = await loginUser(data);
                console.log(response);
