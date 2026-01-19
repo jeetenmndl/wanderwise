@@ -10,8 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import useApi from '@/hooks/useApi'
+import TripCard from '@/components/trips/TripCard'
 
 const TripsPage = () => {
+
+  const {data, error, loading} = useApi('/trips');
+
+  if(loading) return <div>loading</div>
+
   return (
     <section className='py-8 px-20'>
       {/* heading */}
@@ -29,40 +36,17 @@ const TripsPage = () => {
       {/* trips content */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12'>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Trip to France</CardTitle>
-            <CardDescription>Feb 12 2026 - Feb 20 2026</CardDescription>
-            <CardAction>
-              <Button variant='outline' size='icon'>
-                <MoreVertical />
-              </Button>
-            </CardAction>
-          </CardHeader>
-
-          <CardContent>
-            <div className='flex items-center justify-between'>
-              <span>
-                Budget:
-              </span>
-              <span className='text-xl font-bold text-primary'>
-                $200
-              </span>
-            </div>
-
-            <div>
-              <span className='font-bold mt-2'>Destinations: </span>
-              Paris, Lyon, Marseille
-            </div>
-
-          </CardContent>
-
-          <CardFooter>
-            <Button className="w-full">
-              Trip Details
-            </Button>
-          </CardFooter>
-        </Card>
+        {
+          data.length === 0 ? (
+            <div>No trips found. Please add a trip.</div>
+          )
+          :
+          data.map((trip)=>{
+            return (
+              <TripCard key={trip._id} trip={trip} />
+            )
+          })
+        }
 
       </div>
 

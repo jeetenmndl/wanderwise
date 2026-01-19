@@ -53,10 +53,6 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<About />} />
 
-          <Route path="/trips" element={<TripsPage />} />
-          <Route path="/trips/add" element={<AddTripPage />} />
-          <Route path="/trips/edit/:id" element={<EditTripPage />} />
-
         <Route element={<ProtectedRoutes />}>
           <Route path="/dashboard" element={<Dashboard />} />
 
