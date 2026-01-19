@@ -92,8 +92,21 @@ export default function TripForm({ tripInfo }) {
            }
     }
 
-    const onEdit = (data) => {
+    const onEdit = async (data) => {
         console.log(data);
+        try {
+               const response = await api.patch(`/trips/${tripInfo._id}`, data);
+               console.log(response);
+               if(response.data?._id){
+                    toast.success("Trip updated successfully!")
+                   navigate("/trips");
+               }else{
+                   toast.error("Some error occured.");
+               }
+           } catch (error) {
+               console.log(error);
+               toast.error("Some error occured.");
+           }
     }
 
     return (
