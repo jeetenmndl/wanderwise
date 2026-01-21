@@ -27,7 +27,7 @@ const TripDetails = () => {
         {/* trip actions */}
         <div className='w-1/3 space-y-4'>
             <TripNavigations trip={data} />
-            <AddExpense trip={data} />
+            <AddExpense trip={data} setDependency={setDependency} />
         </div>
 
     </section>
