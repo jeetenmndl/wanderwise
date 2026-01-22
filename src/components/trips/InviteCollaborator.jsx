@@ -23,6 +23,8 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { toast } from "sonner"
+import { MailPlus, Plus, Trash2 } from "lucide-react"
+import api from "@/api/axios"
 
 const formSchema = z.object({
     collaboratorEmails: z.array(
@@ -34,7 +36,7 @@ const formSchema = z.object({
     }),
 })
 
-export default function InviteCollaborator() {
+export default function InviteCollaborator({trip, setDependency}) {
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -49,7 +51,19 @@ export default function InviteCollaborator() {
     });
 
     const onSubmit = async (data) => {
-
+        console.log(data);
+        try {
+            const response = await api.post(`/trips/${trip._id}/invite`, data);
+            if(response.status === 200){
+                toast.success("Invitations sent successfully!");
+                form.reset();
+            }else{
+                toast.error("Failed to send invitations. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error inviting collaborators:", error);
+            toast.error("An error occurred while sending invitations.");
+        }
     }
 
     return (
@@ -70,12 +84,12 @@ export default function InviteCollaborator() {
                             {
                                 fields.map((field, index) => {
                                     return (
-                                        <div key={index} className="flex items-center gap-2">
+                                        <div key={index} className="flex items-center gap-2 w-full">
                                             <FormField
                                                 control={form.control}
                                                 name={`collaboratorEmails[${index}]`}
                                                 render={({ field }) => (
-                                                    <FormItem>
+                                                    <FormItem className={"w-full"}>
                                                         <FormControl>
                                                             <Input placeholder="abc@gmail.com" type={"email"} {...field} />
                                                         </FormControl>
@@ -83,6 +97,14 @@ export default function InviteCollaborator() {
                                                     </FormItem>
                                                 )}
                                             />
+
+                                            <Button type="button"
+                                            variant="outline"
+                                            size="icon"
+                                            onClick={()=>{remove(index)}}
+                                            >
+                                                <Trash2 size={20} className="text-red-600" />
+                                            </Button>
                                         </div>
                                     )
                                 })
@@ -95,9 +117,10 @@ export default function InviteCollaborator() {
                                 type="button"
                                 variant="outline"
                                 onClick={() => { append("") }}
-                            >Add Email</Button>
+                            >
+                                <Plus /> Add Email</Button>
 
-                            <Button className="w-full" type="submit">Submit</Button>
+                            <Button className="w-full" type="submit"><MailPlus />Invite</Button>
                         </CardFooter>
                     </Card>
                 </form>
