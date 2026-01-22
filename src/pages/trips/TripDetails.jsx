@@ -1,4 +1,5 @@
 import AddExpense from '@/components/trips/AddExpense';
+import InviteCollaborator from '@/components/trips/InviteCollaborator';
 import TripNavigations from '@/components/trips/TripNavigations';
 import { Card } from '@/components/ui/card'
 import useApi from '@/hooks/useApi';
@@ -28,6 +29,7 @@ const TripDetails = () => {
         <div className='w-1/3 space-y-4'>
             <TripNavigations trip={data} />
             <AddExpense trip={data} setDependency={setDependency} />
+            <InviteCollaborator trip={data} setDependency={setDependency} />
         </div>
 
     </section>
