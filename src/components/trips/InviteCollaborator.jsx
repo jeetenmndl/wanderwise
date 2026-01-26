@@ -84,10 +84,10 @@ export default function InviteCollaborator({trip, setDependency}) {
                             {
                                 fields.map((field, index) => {
                                     return (
-                                        <div key={index} className="flex items-center gap-2 w-full">
+                                        <div key={field.id} className="flex items-center gap-2 w-full">
                                             <FormField
                                                 control={form.control}
-                                                name={`collaboratorEmails[${index}]`}
+                                                name={`collaboratorEmails.${index}`}
                                                 render={({ field }) => (
                                                     <FormItem className={"w-full"}>
                                                         <FormControl>

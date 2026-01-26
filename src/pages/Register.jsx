@@ -26,6 +26,7 @@ import { registerUser } from "@/api/auth"
 import useAuth from "@/hooks/useAuth"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
+import { useEffect } from "react"
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -40,15 +41,21 @@ const formSchema = z.object({
     confirmPassword: z.string().min(8, {
         message: "Password must be atleast 8 characters."
     })
-}).refine((data)=> data.password === data.confirmPassword,{
+}).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"]
 })
 
 export default function Register() {
 
-    const {login} = useAuth();
+    const { login, token } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (token) {
+            navigate("/dashboard");
+        }
+    }, [token])
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -62,14 +69,14 @@ export default function Register() {
 
     const onSubmit = async (data) => {
         console.log(data);
-        const {name, email, password} = data;
+        const { name, email, password } = data;
         try {
-            const response = await registerUser({name, email, password});
+            const response = await registerUser({ name, email, password });
             console.log(response);
-            if(response.token){
+            if (response.token) {
                 login(response.user, response.token);
                 navigate("/dashboard");
-            }else{
+            } else {
                 toast.error("Registration failed. Please try again.");
             }
         } catch (error) {
@@ -86,8 +93,8 @@ export default function Register() {
                     <Card className="w-100">
                         <CardHeader className={"flex items-center justify-between border-b"}>
                             <div>
-                            <CardTitle className="text-2xl font-bold">Register</CardTitle>
-                            <CardDescription>Enter your credentials to register.</CardDescription>
+                                <CardTitle className="text-2xl font-bold">Register</CardTitle>
+                                <CardDescription>Enter your credentials to register.</CardDescription>
                             </div>
                             <img className="w-10 h-10" src="/logo.png" alt="Wanderwise Logo" />
                         </CardHeader>
