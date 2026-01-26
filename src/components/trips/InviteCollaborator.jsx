@@ -71,7 +71,7 @@ export default function InviteCollaborator({trip, setDependency}) {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
-                    <Card className="w-100">
+                    <Card>
                         <CardHeader className={"flex items-center justify-between border-b"}>
                             <div>
                                 <CardTitle>Invite Collaborator</CardTitle>
