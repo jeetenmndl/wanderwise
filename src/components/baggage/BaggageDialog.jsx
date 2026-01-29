@@ -32,11 +32,12 @@ const formSchema = z.object({
         .max(32, "Baggage name must be at most 32 characters."),
 })
 
-const BaggageDialog = ({ type, selectedBaggage, tripId }) => {
+const BaggageDialog = ({ type, selectedBaggage, tripId, setDependency, isOpen, setIsOpen }) => {
+    console.log(selectedBaggage, type)
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
+            name: type === 'edit' ? selectedBaggage.name : '',
         },
     })
 
@@ -47,6 +48,7 @@ const BaggageDialog = ({ type, selectedBaggage, tripId }) => {
             console.log(response);
             if (response.data?._id) {
                 toast.success("Baggage added successfully!")
+                setDependency(prev => prev + 1);
                 form.reset();
             } else {
                 toast.error("Some error occured.");
@@ -56,17 +58,36 @@ const BaggageDialog = ({ type, selectedBaggage, tripId }) => {
             toast.error("Some error occured.");
         }
     }
+
+        const onUpdate = async (data) => {
+        console.log(data)
+        try {
+            const response = await api.put(`/${tripId}/baggages/${selectedBaggage?._id}`, data);
+            console.log(response);
+            if (response.data?._id) {
+                toast.success("Baggage updated successfully!")
+                setDependency(prev => prev + 1);
+                form.reset();
+                setIsOpen(false);
+            } else {
+                toast.error("Some error occured.");
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Some error occured.");
+        }
+    }
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={()=>{setIsOpen(!isOpen)}}>
             <DialogTrigger asChild>
                 <Button><Plus />Add Baggage</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className={"mb-4"}>Add Item name.</DialogTitle>
+                    <DialogTitle className={"mb-4"}> {type==='edit'? "Edit": "Add"} Item name.</DialogTitle>
 
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <form onSubmit={form.handleSubmit(type === 'edit'? onUpdate: onSubmit)} className="space-y-8">
 
                             <FormField
                                 control={form.control}
