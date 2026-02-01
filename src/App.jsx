@@ -17,6 +17,7 @@ import BaggageDetails from "./pages/baggage/BaggageDetails";
 import ItinerariesPage from "./pages/itineraries/ItinerariesPage";
 import ItinerariesDetails from "./pages/itineraries/ItinerariesDetails";
 import AddItineraries from "./pages/itineraries/AddItineraries";
+import EditItineraries from "./pages/itineraries/EditItineraries";
 
 export default function App() {
   const { token, logout } = useAuth();
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="/itineraries" element={<ItinerariesPage />} />
           <Route path="/itineraries/add" element={<AddItineraries />} />
           <Route path="/itineraries/:id" element={<ItinerariesDetails />} />
+          <Route path="/itineraries/:tripId/edit/:itineraryId" element={<EditItineraries />} />
         </Route>
 
       </Routes>

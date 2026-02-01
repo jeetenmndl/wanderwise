@@ -20,7 +20,7 @@ const AddItineraries = () => {
           <CardDescription>Fill information of your activities.</CardDescription>
         </CardHeader>
         <CardContent>
-            <ItinerariesForm />
+            <ItinerariesForm type="add" />
         </CardContent>
       </Card>
     </section>
