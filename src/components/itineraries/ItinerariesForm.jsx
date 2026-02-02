@@ -42,6 +42,83 @@ const itinerariesSchema = z.object({
     activities: z.array(activitySchema).min(1, "Atleast one activity is required")
 })
 
+const ActivityItem = ({ index, control, removeActivity }) => {
+    const { fields: noteFields, append: appendNote, remove: removeNote } = useFieldArray({
+        control,
+        name: `activities.${index}.notes`
+    })
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Activity {index + 1}</CardTitle>
+                <CardAction className={"flex gap-2"}>
+                    <Button type="button" size='sm' variant="outline" onClick={() => appendNote("")} className={"text-blue-600 hover:bg-blue-600 hover:text-white"} >
+                        <Plus /> Add Note
+                    </Button>
+                    <Button type="button" size="sm" variant="outline" onClick={() => removeActivity(index)} className={"text-red-600 hover:bg-red-600 hover:text-white"} >
+                        <Trash2 /> Remove Activity
+                    </Button>
+                </CardAction>
+            </CardHeader>
+            <CardContent className={"space-y-4"}>
+                <FormField
+                    control={control}
+                    name={`activities.${index}.name`}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Activity Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Launch" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={control}
+                    name={`activities.${index}.time`}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Activity Time</FormLabel>
+                            <FormControl>
+                                <Input placeholder="At Noon" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <div>
+                    <h3 className='font-medium'>Notes</h3>
+                </div>
+
+                {noteFields.map((note, noteIndex) => (
+                    <div key={note.id} className="flex w-full items-end gap-2 ">
+                        <FormField
+                            control={control}
+                            name={`activities.${index}.notes.${noteIndex}`}
+                            render={({ field }) => (
+                                <FormItem className={"w-full"}>
+                                    <FormControl>
+                                        <Input placeholder="Don't forget to carry passport." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {noteFields.length > 1 && (
+                            <Button type="button" size="icon" variant="outline" onClick={() => removeNote(noteIndex)} >
+                                <Trash2 className="text-red-600" />
+                            </Button>
+                        )}
+                    </div>
+                ))}
+            </CardContent>
+        </Card>
+    )
+}
+
 const ItinerariesForm = ({type, itineraryInfo}) => {
     const form = useForm({
         resolver: zodResolver(itinerariesSchema),
@@ -60,11 +137,6 @@ const ItinerariesForm = ({type, itineraryInfo}) => {
     const { fields: activityFields, append: appendActivity, remove: removeActivity } = useFieldArray({
         control: form.control,
         name: "activities"
-    })
-
-    const { fields: notesFields, append: appendNote, remove: removeNote } = useFieldArray({
-        control: form.control,
-        name: "activities.notes"
     })
 
     function onSubmit(data) {
@@ -136,84 +208,16 @@ const ItinerariesForm = ({type, itineraryInfo}) => {
                                 notes: [""]
                             })
                         }}
+                         className={"text-blue-600 hover:bg-blue-600 hover:text-white"}
                     >
                         <Plus /> Add Activity
                     </Button>
                 </div>
 
                 {
-                    activityFields.map((activity, index) => {
-                        return (
-                            <Card key={activity.id}>
-                                <CardHeader>
-                                    <CardTitle>Activity {index + 1}</CardTitle>
-                                    <CardAction>
-                                        <Button type="button" variant="outline"
-                                        onClick={()=>{
-                                            appendNote("")
-                                        }}
-                                        >
-                                            <Plus /> Add Note
-                                        </Button>
-                                    </CardAction>
-                                </CardHeader>
-                                <CardContent className={"space-y-4"}>
-                                    <FormField
-                                        control={form.control}
-                                        name={`activities.${index}.name`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Activity Name</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="Launch" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name={`activities.${index}.time`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Activity Time</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="At Noon" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    {
-                                        notesFields.map((note, noteIndex) => {
-                                            return (
-                                                <div key={note.id} className="flex w-full items-end gap-2 ">
-
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`activities.${index}.notes.${noteIndex}`}
-                                                        render={({ field }) => (
-                                                            <FormItem className={"w-full"}>
-                                                                <FormControl>
-                                                                    <Input placeholder="Don't forget to carry passport." {...field} />
-                                                                </FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
-
-                                                    <Button type="button" size="icon" variant="outline" onClick={() => { removeNote(noteIndex) }} >
-                                                        <Trash2 className="text-red-600" />
-                                                    </Button>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </CardContent>
-                            </Card>
-                        )
-                    })
+                    activityFields.map((activity, index) => (
+                        <ActivityItem key={activity.id} index={index} control={form.control} removeActivity={removeActivity} />
+                    ))
                 }
 
             </form>
