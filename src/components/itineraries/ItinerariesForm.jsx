@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input"
 import { Plus, Trash2 } from "lucide-react"
 import api from "@/api/axios"
 import { toast } from "sonner"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 const activitySchema = z.object({
     name: z.string().min(3, "Must be atleast 3 characters"),
@@ -42,7 +42,11 @@ const itinerariesSchema = z.object({
     activities: z.array(activitySchema).min(1, "Atleast one activity is required")
 })
 
-const ItinerariesForm = ({type, itineraryInfo}) => {
+const ItinerariesForm = ({ type, itineraryInfo }) => {
+
+    const {tripId} = useParams();
+    const navigate = useNavigate();
+
     const form = useForm({
         resolver: zodResolver(itinerariesSchema),
         defaultValues: type === "edit" ? itineraryInfo : {
@@ -62,18 +66,43 @@ const ItinerariesForm = ({type, itineraryInfo}) => {
         name: "activities"
     })
 
-    const { fields: notesFields, append: appendNote, remove: removeNote } = useFieldArray({
-        control: form.control,
-        name: "activities.notes"
-    })
-
-    function onSubmit(data) {
-        // Do something with the form values.
-        console.log(data)
+   const onAdd = async (data) => {
+        console.log("on add function",data);
+        try {
+               const response = await api.post(`/${tripId}/itineraries`, data);
+               console.log(response);
+               if(response.data?._id){
+                    toast.success("Itinerary created successfully!")
+                   navigate(`/itineraries/${tripId}`);
+               }else{
+                   toast.error("Some error occured.");
+               }
+           } catch (error) {
+               console.log(error);
+               toast.error("Some error occured.");
+           }
     }
+
+    const onEdit = async (data) => {
+        console.log(data);
+        try {
+               const response = await api.patch(`/${tripId}/itineraries/${itineraryInfo._id}`, data);
+               console.log(response);
+               if(response.data?._id){
+                    toast.success("Itinerary updated successfully!")
+                   navigate(`/itineraries/${tripId}`);
+               }else{
+                   toast.error("Some error occured.");
+               }
+           } catch (error) {
+               console.log(error);
+               toast.error("Some error occured.");
+           }
+    }
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(type==="edit"? onEdit : onAdd)} className="space-y-8">
 
                 <Card>
                     <CardHeader>
@@ -144,77 +173,12 @@ const ItinerariesForm = ({type, itineraryInfo}) => {
                 {
                     activityFields.map((activity, index) => {
                         return (
-                            <Card key={activity.id}>
-                                <CardHeader>
-                                    <CardTitle>Activity {index + 1}</CardTitle>
-                                    <CardAction>
-                                        <Button type="button" variant="outline"
-                                        onClick={()=>{
-                                            appendNote("")
-                                        }}
-                                        >
-                                            <Plus /> Add Note
-                                        </Button>
-                                    </CardAction>
-                                </CardHeader>
-                                <CardContent className={"space-y-4"}>
-                                    <FormField
-                                        control={form.control}
-                                        name={`activities.${index}.name`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Activity Name</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="Launch" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name={`activities.${index}.time`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Activity Time</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="At Noon" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    {
-                                        notesFields.map((note, noteIndex) => {
-                                            return (
-                                                <div key={note.id} className="flex w-full items-end gap-2 ">
-
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`activities.${index}.notes.${noteIndex}`}
-                                                        render={({ field }) => (
-                                                            <FormItem className={"w-full"}>
-                                                                <FormControl>
-                                                                    <Input placeholder="Don't forget to carry passport." {...field} />
-                                                                </FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
-
-                                                    <Button type="button" size="icon" variant="outline" onClick={() => { removeNote(noteIndex) }} >
-                                                        <Trash2 className="text-red-600" />
-                                                    </Button>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </CardContent>
-                            </Card>
+                            <ActivityCard key={activity.id} activity={activity} index={index} form={form} removeActivity={removeActivity}/>
                         )
                     })
                 }
+
+                <Button type="submit">Submit</Button> 
 
             </form>
         </Form>
@@ -222,3 +186,93 @@ const ItinerariesForm = ({type, itineraryInfo}) => {
 }
 
 export default ItinerariesForm
+
+const ActivityCard = ({activity, index, form, removeActivity}) => {
+    
+    const { fields: notesFields, append: appendNote, remove: removeNote } = useFieldArray({
+        control: form.control,
+        name: `activities.${index}.notes`
+    })
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Activity {index + 1}</CardTitle>
+                <CardAction className="flex gap-2">
+                    <Button type="button" size='sm' variant="outline"
+                        onClick={() => {
+                            appendNote("")
+                        }}
+                    >
+                        <Plus /> Add Note
+                    </Button>
+                    <Button type="button" size='sm' variant="outline"
+                        onClick={() => {
+                            removeActivity(index)
+                        }}
+                        className={"text-red-600 hover:text-600"}
+                    >
+                        <Trash2 /> Delete Activity
+                    </Button>
+                </CardAction>
+            </CardHeader>
+            <CardContent className={"space-y-4"}>
+                <FormField
+                    control={form.control}
+                    name={`activities.${index}.name`}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Activity Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Launch" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name={`activities.${index}.time`}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Activity Time</FormLabel>
+                            <FormControl>
+                                <Input placeholder="At Noon" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <div>
+                    <h3 className='text-sm font-semibold'>Notes</h3>
+                </div>
+
+                {
+                    notesFields.map((note, noteIndex) => {
+                        return (
+                            <div key={note.id} className="flex w-full items-end gap-2 ">
+
+                                <FormField
+                                    control={form.control}
+                                    name={`activities.${index}.notes.${noteIndex}`}
+                                    render={({ field }) => (
+                                        <FormItem className={"w-full"}>
+                                            <FormControl>
+                                                <Input placeholder="Don't forget to carry passport." {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <Button type="button" size="icon" variant="outline" onClick={() => { removeNote(noteIndex) }} >
+                                    <Trash2 className="text-red-600" />
+                                </Button>
+                            </div>
+                        )
+                    })
+                }
+            </CardContent>
+        </Card>
+    )
+}
