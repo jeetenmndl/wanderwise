@@ -42,7 +42,7 @@ const itinerariesSchema = z.object({
     activities: z.array(activitySchema).min(1, "Atleast one activity is required")
 })
 
-const ItinerariesForm = ({ type, itineraryInfo }) => {
+const ItinerariesForm = ({ type, itineraryInfo, thisDate }) => {
 
     const {tripId} = useParams();
     const navigate = useNavigate();
@@ -52,7 +52,7 @@ const ItinerariesForm = ({ type, itineraryInfo }) => {
         defaultValues: type === "edit" ? itineraryInfo : {
             title: "",
             description: "",
-            date: new Date().toISOString().split("T")[0],
+            date: thisDate || new Date().toISOString().split("T")[0],
             activities: [{
                 name: "",
                 time: "",
@@ -145,7 +145,7 @@ const ItinerariesForm = ({ type, itineraryInfo }) => {
                                 <FormItem>
                                     <FormLabel>Date</FormLabel>
                                     <FormControl>
-                                        <Input type="date" {...field} />
+                                        <Input type="date" {...field} disabled={(thisDate || type==="edit")? true : false} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
