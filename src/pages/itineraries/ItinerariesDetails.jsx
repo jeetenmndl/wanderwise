@@ -53,7 +53,7 @@ const ItinerariesDetails = () => {
               return (
                 <Card key={index}>
                   <CardContent className="text-center py-4 space-y-2">
-                    <AlertTriangle className='w-12 h-12 text-orange-600 mx-auto' />
+                    <AlertTriangle className='w-12 h-12 text-orange-400 mx-auto' />
                     <p className='text-lg font-semibold'>{displayDate}</p>
                     <p className='text-lg font-semibold text-gray-400'>No itinerary for this day</p>
 

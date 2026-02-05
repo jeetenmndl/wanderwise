@@ -3,6 +3,7 @@ import { MoreVertical, Plus } from 'lucide-react'
 import React, { useState } from 'react'
 import useApi from '@/hooks/useApi'
 import TripCard from '@/components/trips/TripCard'
+import Loading from '@/components/common/Loading'
 
 const TripsPage = () => {
 
@@ -10,7 +11,7 @@ const TripsPage = () => {
 
   const {data, error, loading} = useApi('/trips', {}, [dependency]);
 
-  if(loading) return <div>loading</div>
+  if(loading) return <Loading />
 
   return (
     <section className='py-8 px-20'>

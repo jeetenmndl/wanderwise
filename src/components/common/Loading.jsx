@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Loading = ({text=""}) => {
+const Loading = ({text}) => {
   return (
     <div className={`absolute top-0 w-full min-h-screen bg-transparent flex items-center justify-center`}>
       <div className="text-center">
@@ -9,7 +9,7 @@ const Loading = ({text=""}) => {
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-blue-200 animate-ping"></div>
             <div className="relative rounded-full">
-              <img src="/logo.png" alt="wander wise" className='h-20 w-20 ' />
+              <img src="/logo.png" alt="wander wise" className='h-20 w-20' />
             </div>
           </div>
         </div>

@@ -16,15 +16,15 @@ export default function Dashboard() {
   let upcoming = 0;
   let completed = 0;
 
-  trips.forEach(trip => {
+  trips.forEach((trip) => {
     const startDate = new Date(trip.startDate);
     const endDate = new Date(trip.endDate);
 
     if (startDate <= today && endDate >= today) {
       ongoing++;
-    } else if (startDate > today) {
+    } else if (today < startDate) {
       upcoming++;
-    } else if (endDate < today) {
+    } else if (today > endDate) {
       completed++;
     }
   });
